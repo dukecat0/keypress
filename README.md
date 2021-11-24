@@ -1,6 +1,6 @@
 # keypress
 
-A Swift library that simulates key press.
+Simulates key press in Swift.
 
 ## Installation
 
