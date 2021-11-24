@@ -23,4 +23,4 @@ Done!
 
 ### TODO:
 
-[ ] Allows to press <kbd>Command</kbd>/<kbd>Option</kbd>/<kbd>Shift</kbd> at the same time.
+[] Allows to press <kbd>Command</kbd>/<kbd>Option</kbd>/<kbd>Shift</kbd> at the same time.
