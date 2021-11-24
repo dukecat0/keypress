@@ -13,7 +13,7 @@ public struct keypress {
         }
     }
 
-    public static func press (_ key: String) -> Bool{
+    public static func press (_ key: String) {
         do {
             try check(key)
         } catch KeyError.KeyNotFound {
@@ -33,6 +33,5 @@ public struct keypress {
         key_down?.post(tap: loc)
         key_up?.post(tap: loc)
 
-        return true
     }
 }
