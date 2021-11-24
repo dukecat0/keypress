@@ -21,8 +21,5 @@ let package = Package(
         .target(
             name: "keypress",
             dependencies: []),
-        .testTarget(
-            name: "keypressTests",
-            dependencies: ["keypress"]),
     ]
 )
