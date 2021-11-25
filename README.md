@@ -7,7 +7,7 @@ Simulates key press in Swift.
 Add the following line to the `dependencies` in `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/meowmeowmeowcat/keypress", from: "0.0.1"),
+.package(url: "https://github.com/meowmeowmeowcat/keypress", from: "0.0.2"),
 ```
 
 ## Usage
