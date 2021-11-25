@@ -125,6 +125,7 @@ var keyCode : [String: UInt16] = [  // a-z
                                     "rightcommand": UInt16(kVK_RightCommand),
                                     "⌃": UInt16(kVK_Control),
                                     "control": UInt16(kVK_Control),
+                                    "ctrl": UInt16(kVK_Control),
                                     "rightcontrol": UInt16(kVK_RightControl),
                                     "fn": UInt16(kVK_Function),
                                     "function": UInt16(kVK_Function),
