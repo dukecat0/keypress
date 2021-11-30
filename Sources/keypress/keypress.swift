@@ -1,4 +1,7 @@
-import CoreGraphics
+import Foundation
+
+let src = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+let loc = CGEventTapLocation.cghidEventTap
 
 public struct keypress {
     enum KeyError: Error {
@@ -23,20 +26,39 @@ public struct keypress {
         }
     }
 
-    public static func press (_ key: String) {
-        docheck(key)
+    public static func press(_ key: String) {
+        if key.count > 1 {
+            for char in key {
+                if String(char).containsWhitespace() {
+                    continue
+                }
+                docheck(String(char))
+            }
+            for char in key {
+                if String(char).containsWhitespace() {
+                    let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode["space"]!), keyDown: true)
+                    let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode["space"]!), keyDown: false)
+                    key_down?.post(tap: loc)
+                    key_up?.post(tap: loc)
+                } else {
+                    let char_low = String(char).lowercased()
+                    let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[char_low]!), keyDown: true)
+                    let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[char_low]!), keyDown: false)
+                    key_down?.post(tap: loc)
+                    key_up?.post(tap: loc)
+                }
+            }
+        } else {
+            docheck(key)
 
-        let key = key.lowercased()
+            let key = key.lowercased()
 
-        let src = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+            let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[key]!), keyDown: true)
+            let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[key]!), keyDown: false)
 
-        let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[key]!), keyDown: true)
-        let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[key]!), keyDown: false)
-
-        let loc = CGEventTapLocation.cghidEventTap
-
-        key_down?.post(tap: loc)
-        key_up?.post(tap: loc)
+            key_down?.post(tap: loc)
+            key_up?.post(tap: loc)
+        }
 
     }
 
@@ -46,8 +68,6 @@ public struct keypress {
 
         let key = key.lowercased()
         let with = with.lowercased()
-
-        let src = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
 
         let key_down_with = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[with]!), keyDown: true)
         let key_up_with = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[with]!), keyDown: false)
@@ -71,8 +91,6 @@ public struct keypress {
             print("\(with) key is not supported.")
         }
 
-        let loc = CGEventTapLocation.cghidEventTap
-
         key_down_with?.post(tap: loc)
         key_down?.post(tap: loc)
         key_up?.post(tap: loc)
@@ -90,4 +108,10 @@ public struct keypress {
         return isPressed
     }
 
+}
+
+extension String {
+    func containsWhitespace() -> Bool {
+        return rangeOfCharacter(from: .whitespacesAndNewlines) != nil
+    }
 }
