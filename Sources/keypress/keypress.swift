@@ -75,9 +75,9 @@ public struct keypress {
         let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[key]!), keyDown: false)
 
         switch(with) {
-            case "command", "⌘":
+            case "command", "⌘", "cmd":
             key_down?.flags = CGEventFlags.maskCommand
-            case "option", "⌥":
+            case "option", "⌥", "opt":
             key_down?.flags = CGEventFlags.maskAlternate
             case "shift", "⇧":
             key_down?.flags = CGEventFlags.maskShift
@@ -85,7 +85,7 @@ public struct keypress {
             key_down?.flags = CGEventFlags.maskControl
             case "function", "fn":
             key_down?.flags = CGEventFlags.maskSecondaryFn
-            case "capslock":
+            case "capslock", "caps":
             key_down?.flags = CGEventFlags.maskAlphaShift
             default:
             print("\(with) key is not supported.")
