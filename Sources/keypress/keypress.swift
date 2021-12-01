@@ -110,7 +110,7 @@ public struct keypress {
 
 }
 
-extension String {
+fileprivate extension String {
     func containsWhitespace() -> Bool {
         return rangeOfCharacter(from: .whitespacesAndNewlines) != nil
     }
