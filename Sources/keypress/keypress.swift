@@ -11,7 +11,7 @@ public enum keypress {
     private static func check(_ key: String) throws {
         let key = key.lowercased()
 
-        guard keyCode[key] != nil else {
+        guard keyCode[key] != nil || ShiftKeyCode[key] != nil else {
             throw KeyError.KeyNotFound
         }
     }
@@ -30,65 +30,74 @@ public enum keypress {
         }
     }
 
+    public static func write(_ str: String) {
+        for char in str {
+            if String(char).containsWhitespace() {
+                continue
+            }
+            docheck(String(char))
+        }
+
+        for char in str {
+            if String(char).containsWhitespace() {
+                let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode["space"]!), keyDown: true)
+                let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode["space"]!), keyDown: false)
+                key_down?.post(tap: loc)
+                key_up?.post(tap: loc)
+
+            } else if String(char).isUppercase, !isStringAnInt(String(char)), keyCode[String(char).lowercased()] != nil {
+                let key_down_shift = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(0x38), keyDown: true)
+                let key_up_shift = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(0x38), keyDown: false)
+                let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[String(char).lowercased()]!), keyDown: true)
+                let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[String(char).lowercased()]!), keyDown: false)
+                key_down?.flags = CGEventFlags.maskShift
+                key_down_shift?.post(tap: loc)
+                key_down?.post(tap: loc)
+                key_up?.post(tap: loc)
+                key_up_shift?.post(tap: loc)
+
+            } else if keyCode[String(char)] == nil {
+                let key_down_shift = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(0x38), keyDown: true)
+                let key_up_shift = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(0x38), keyDown: false)
+                let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(ShiftKeyCode[String(char)]!), keyDown: true)
+                let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(ShiftKeyCode[String(char)]!), keyDown: false)
+                key_down?.flags = CGEventFlags.maskShift
+                key_down_shift?.post(tap: loc)
+                key_down?.post(tap: loc)
+                key_up?.post(tap: loc)
+                key_up_shift?.post(tap: loc)
+
+            } else {
+                let char_low = String(char).lowercased()
+                let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[char_low]!), keyDown: true)
+                let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[char_low]!), keyDown: false)
+                key_down?.post(tap: loc)
+                key_up?.post(tap: loc)
+            }
+        }
+    }
+
     public static func press(_ key: String) {
-        if keyCode.keys.contains(key) {
-            docheck(key)
+        docheck(key)
+        let key = key.lowercased()
 
-            let key = key.lowercased()
+        if keyCode[key] == nil {
+            let key_down_shift = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(0x38), keyDown: true)
+            let key_up_shift = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(0x38), keyDown: false)
+            let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(ShiftKeyCode[key]!), keyDown: true)
+            let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(ShiftKeyCode[key]!), keyDown: false)
+            key_down?.flags = CGEventFlags.maskShift
+            key_down_shift?.post(tap: loc)
+            key_down?.post(tap: loc)
+            key_up?.post(tap: loc)
+            key_up_shift?.post(tap: loc)
 
+        } else {
             let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[key]!), keyDown: true)
             let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[key]!), keyDown: false)
 
             key_down?.post(tap: loc)
             key_up?.post(tap: loc)
-        } else {
-            if key.count > 1 {
-                for char in key {
-                    if String(char).containsWhitespace() {
-                        continue
-                    }
-                    docheck(String(char))
-                }
-                for char in key {
-                    if String(char).containsWhitespace() {
-                        let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode["space"]!), keyDown: true)
-                        let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode["space"]!), keyDown: false)
-                        key_down?.post(tap: loc)
-                        key_up?.post(tap: loc)
-
-                    } else if String(char).isUppercase, !isStringAnInt(String(char)) {
-                        let key_down_shift = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(0x38), keyDown: true)
-                        let key_up_shift = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(0x38), keyDown: false)
-                        let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[String(char).lowercased()]!), keyDown: true)
-                        let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[String(char).lowercased()]!), keyDown: false)
-                        key_down?.flags = CGEventFlags.maskShift
-                        key_down_shift?.post(tap: loc)
-                        key_down?.post(tap: loc)
-                        key_up?.post(tap: loc)
-                        key_up_shift?.post(tap: loc)
-
-                    } else {
-                        let char_low = String(char).lowercased()
-                        let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[char_low]!), keyDown: true)
-                        let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[char_low]!), keyDown: false)
-                        key_down?.post(tap: loc)
-                        key_up?.post(tap: loc)
-                    }
-                }
-            } else {
-                if key.isUppercase, !isStringAnInt(key) {
-                    let key_down_shift = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(0x38), keyDown: true)
-                    let key_up_shift = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(0x38), keyDown: false)
-                    let key_down = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[key.lowercased()]!), keyDown: true)
-                    let key_up = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode[key.lowercased()]!), keyDown: false)
-                    key_down?.flags = CGEventFlags.maskShift
-
-                    key_down_shift?.post(tap: loc)
-                    key_down?.post(tap: loc)
-                    key_up?.post(tap: loc)
-                    key_up_shift?.post(tap: loc)
-                }
-            }
         }
     }
 
