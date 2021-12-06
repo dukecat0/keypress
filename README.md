@@ -11,9 +11,9 @@ import keypress
 keypress.press("A")
 ```
 
-Pressing multiple keys:
+Simulating the typing of the following text:
 ```swift
-keypress.press("Hello World")
+keypress.write("Hello World")
 ```
 
 Pressing hotkey <kbd>Command</kbd>+<kbd>A</kbd>:
@@ -26,5 +26,5 @@ keypress.hotkey("Command", "A")
 Add the following line to the `dependencies` in `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/meowmeowmeowcat/keypress", from: "0.0.3"),
+.package(url: "https://github.com/meowmeowmeowcat/keypress", from: "0.0.4"),
 ```
