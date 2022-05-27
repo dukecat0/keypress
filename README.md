@@ -1,6 +1,6 @@
 # keypress
 
-Simulates key press in Swift.
+Simulates key press in Swift on macOS.
 
 ## Usage
 
